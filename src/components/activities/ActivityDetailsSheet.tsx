@@ -38,7 +38,7 @@ const IconWrapper = ({ children, bg = "bg-primary/10" }: { children: React.React
 // Note item
 function NoteItem({ note }: { note: ActivityNote }) {
   const createdAt = note.createdAt && isValid(parseISO(note.createdAt))
-    ? format(parseISO(note.createdAt), "MMM d, yyyy 'at' h:mm a")
+    ? format(parseISO(note.createdAt), "MMMM d, yyyy 'at' h:mm:ss a") // ✅ exact date & time
     : "N/A";
 
   return (
@@ -191,7 +191,7 @@ export function ActivityDetailsSheet({
                   variant="outline"
                   size="sm"
                   className="flex-shrink-0"
-                  onClick={onAddNote} // ✅ must reference the prop
+                  onClick={onAddNote}
                 >
                   <Plus className="h-4 w-4 mr-1" />
                   Add Note

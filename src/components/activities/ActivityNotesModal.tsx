@@ -15,7 +15,13 @@ interface ActivityNotesModalProps {
   open: boolean;
   onClose: () => void;
   activityId: string;
-  onSave: (note: { content: string; attachments?: { name: string; type: string; url: string }[] }) => void;
+  onSave: (note: {
+    content: string;
+    attachments?: { name: string; type: string; url: string }[];
+    createdAt: string;
+    createdById: string;
+    createdByName: string;
+  }) => void;
   currentUserName: string;
   currentUserId: string;
 }
@@ -79,10 +85,13 @@ export function ActivityNotesModal({
   const handleSave = () => {
   if (!noteContent.trim() && attachments.length === 0) return;
 
-  onSave({
-    content: noteContent,
-    attachments: attachments.length > 0 ? attachments : undefined,
-  });
+ onSave({
+  content: noteContent,
+  attachments: attachments.length > 0 ? attachments : undefined,
+  createdAt: new Date().toISOString(),   // current timestamp
+  createdById: currentUserId,           // user who added the note
+  createdByName: currentUserName,       // display name
+});
 
   setNoteContent("");
   setAttachments([]);

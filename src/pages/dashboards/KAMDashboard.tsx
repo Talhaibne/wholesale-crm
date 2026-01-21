@@ -211,33 +211,44 @@ const paginatedActivities = useMemo(() => {
     toast({ title: "Activity Deleted", description: "The activity has been removed." });
   };
 
-  const handleAddNote = (note: Omit<ActivityNote, "id" | "activityId">) => {
-    if (!noteActivity) return;
-    
-    const newNote: ActivityNote = {
-      ...note,
-      id: `note-${Date.now()}`,
-      activityId: noteActivity.id,
-    };
+ const handleAddNote = (note: {
+  content: string;
+  attachments?: { name: string; type: string; url: string }[];
+  createdAt: string;
+  createdById: string;
+  createdByName: string;
+}) => {
+  if (!noteActivity) return;
 
-    setActivities((prev) =>
-      prev.map((a) =>
-        a.id === noteActivity.id
-          ? { ...a, notes: [...(a.notes || []), newNote] }
-          : a
-      )
-    );
+  const newNote: ActivityNote = {
+  id: `note-${Date.now()}`,
+  activityId: noteActivity.id,
+  content: note.content,
+  attachments: note.attachments,
+  createdAt: note.createdAt,
+  createdBy: note.createdByName, // ✅ just use a single string field
+};
 
-    // Update viewing activity if open
-    if (viewingActivity?.id === noteActivity.id) {
-      setViewingActivity({
-        ...viewingActivity,
-        notes: [...(viewingActivity.notes || []), newNote],
-      });
-    }
 
-    toast({ title: "Note Added", description: "Your note has been saved." });
-  };
+  setActivities((prev) =>
+    prev.map((a) =>
+      a.id === noteActivity.id
+        ? { ...a, notes: [...(a.notes || []), newNote] }
+        : a
+    )
+  );
+
+  // Update viewing activity if open
+  if (viewingActivity?.id === noteActivity.id) {
+    setViewingActivity({
+      ...viewingActivity,
+      notes: [...(viewingActivity.notes || []), newNote],
+    });
+  }
+
+  toast({ title: "Note Added", description: "Your note has been saved." });
+};
+
 
   /* ---------------- UI ---------------- */
   return (
